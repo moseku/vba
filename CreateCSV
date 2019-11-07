@@ -1,0 +1,10 @@
+Sub CreateCSV()
+
+Application.Goto Sheets("lista").Range("A1")
+ThisWorkbook.Sheets("lista").Copy
+
+    ActiveWorkbook.SaveAs Filename:= _
+       "F:\rekrutacja\lista.csv" _
+       , FileFormat:=xlCSV, CreateBackup:=False, Local:=True
+       
+End Sub
