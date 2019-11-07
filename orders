@@ -1,0 +1,57 @@
+Sub zamowienia_lista()
+'
+Sheets("orders2").Activate
+
+Dim kolumna As Range
+Dim komórka As Range
+Dim licznik As Long
+
+Set kolumna = Range("J2:J100")
+
+licznik = 0
+
+For Each komórka In kolumna
+If komórka.Value <> 0 Then licznik = licznik + 1
+Next komórka
+
+
+Dim zmienna As Integer
+   
+    For zmienna = 1 To licznik Step 1
+    
+    Sheets("orders").Select
+    Sheets("orders").Copy
+    Range("I9").Select
+    ActiveSheet.ListObjects("Tabela1").Range.AutoFilter Field:=2, Criteria1:= _
+        "ZT"
+    ActiveSheet.ListObjects("Tabela1").Range.AutoFilter Field:=5, Criteria1:=">=" & Format(Date, "yyyy-mm-dd"), Operator:=xlFilterValues _
+        
+    ActiveSheet.ListObjects("Tabela1").Range.AutoFilter Field:=7, Criteria1:= _
+        ("B" & zmienna)
+    Range("Tabela1[#All]").Select
+    Selection.Copy
+    Range("I1").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Columns("A:H").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlToLeft
+    Columns("C:C").Select
+    Selection.NumberFormat = "0"
+    Columns("D:D").Select
+    Selection.Delete Shift:=xlToLeft
+    Columns("D:D").Select
+    Selection.NumberFormat = "m/d/yyyy"
+    Range("H8").Select
+    
+        ActiveWorkbook.SaveAs Filename:= _
+       "F:\rekrutacja\B" & zmienna & "_" & Format(Date, "ddmmyyyy") & ".xlsx", FileFormat:=xlOpenXMLWorkbook _
+        , CreateBackup:=False
+    ActiveWorkbook.Close
+    
+    Windows("orders2.xlsm").Activate
+    
+    Next zmienna
+    
+    MsgBox "Wszystkie zamówienia zostały zapisane :)"
+End Sub
